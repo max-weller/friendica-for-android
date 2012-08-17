@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.text.Html;
@@ -18,6 +19,7 @@ import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.util.Log;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -267,30 +269,44 @@ public class PostListAdapter extends ArrayAdapter<JSONObject> {
 			final TwAjax pidl = new TwAjax(getContext(), true, false);
 			pidl.ignoreSSLCerts = true;
 			final String piurl = img.getSource();
-			Log.i(TAG, "TRY Downloading post Img: " + piurl);
 			final int targetImg = pos;
-			final File pifile = new File(Max.IMG_CACHE_DIR + "/pi_" + Max.cleanFilename(piurl));
-			H.picture[targetImg].setTag(pifile.getAbsolutePath());
-			if (pifile.isFile()) {
-				Log.i(TAG, "OK  Load cached post Img: " + piurl);
-				BitmapDrawable bmp = new BitmapDrawable(pifile.getAbsolutePath());
-				if (bmp.getBitmap() != null && bmp.getBitmap().getWidth()>30) { //minWidth 30px to remove facebook's ugly icons
-					H.picture[targetImg].setImageDrawable(bmp);
-					H.picture[targetImg].setVisibility(View.VISIBLE);
-				}
-			} else {
-				pidl.urlDownloadToFile(piurl, pifile.getAbsolutePath(), new Runnable() {
-					@Override
-					public void run() {
-						Log.i(TAG, "OK  Download post Img: " + piurl);
-						BitmapDrawable bmp = new BitmapDrawable(pifile.getAbsolutePath());
-						if (bmp.getBitmap() != null && bmp.getBitmap().getWidth()>30) { //minWidth 30px to remove facebook's ugly icons
-							H.picture[targetImg].setImageDrawable(bmp);
-							H.picture[targetImg].setVisibility(View.VISIBLE);
-						}
-					}
-				});
+
+			if(piurl.startsWith("data:image")) {
+				final int imgStart = piurl.indexOf("base64,") + 7; // SHOULD CHECK FOR FAILURE TO FIND base64,
+				final String encodedImg = piurl.substring(imgStart);
+				final int imgHash = encodedImg.hashCode();
+				Log.i(TAG, "TRY Decoding embedded post Img: " + Integer.toString(imgHash));
+
+				final byte[] imgAsBytes = Base64.decode(encodedImg.getBytes(), Base64.DEFAULT);
+				H.picture[targetImg].setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(imgAsBytes, 0, imgAsBytes.length)));
+				H.picture[targetImg].setVisibility(View.VISIBLE);
 			}
+			else {
+				Log.i(TAG, "TRY Downloading post Img: " + piurl);
+				final File pifile = new File(Max.IMG_CACHE_DIR + "/pi_" + Max.cleanFilename(piurl));
+				H.picture[targetImg].setTag(pifile.getAbsolutePath());
+				if (pifile.isFile()) {
+					Log.i(TAG, "OK  Load cached post Img: " + piurl);
+					BitmapDrawable bmp = new BitmapDrawable(pifile.getAbsolutePath());
+					if (bmp.getBitmap() != null && bmp.getBitmap().getWidth()>30) { //minWidth 30px to remove facebook's ugly icons
+						H.picture[targetImg].setImageDrawable(bmp);
+						H.picture[targetImg].setVisibility(View.VISIBLE);
+					}
+				} else {
+					pidl.urlDownloadToFile(piurl, pifile.getAbsolutePath(), new Runnable() {
+						@Override
+						public void run() {
+							Log.i(TAG, "OK  Download post Img: " + piurl);
+							BitmapDrawable bmp = new BitmapDrawable(pifile.getAbsolutePath());
+							if (bmp.getBitmap() != null && bmp.getBitmap().getWidth()>30) { //minWidth 30px to remove facebook's ugly icons
+								H.picture[targetImg].setImageDrawable(bmp);
+								H.picture[targetImg].setVisibility(View.VISIBLE);
+							}
+						}
+					});
+				}
+			}
+
 			pos++;
 			
 		}
