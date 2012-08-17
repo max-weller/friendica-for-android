@@ -1,6 +1,8 @@
 package de.wikilab.android.friendica01;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.json.JSONException;
@@ -272,14 +274,35 @@ public class PostListAdapter extends ArrayAdapter<JSONObject> {
 			final int targetImg = pos;
 
 			if(piurl.startsWith("data:image")) {
+				Log.i(TAG, "TRY Extracting embedded post Img: " + piurl);
 				final int imgStart = piurl.indexOf("base64,") + 7; // SHOULD CHECK FOR FAILURE TO FIND base64,
 				final String encodedImg = piurl.substring(imgStart);
 				final int imgHash = encodedImg.hashCode();
-				Log.i(TAG, "TRY Decoding embedded post Img: " + Integer.toString(imgHash));
+				final String imgHashString = Integer.toString(imgHash);
+				
+				final File pifile = new File(Max.IMG_CACHE_DIR + "/pi_" + Max.cleanFilename(imgHashString));
+				H.picture[targetImg].setTag(pifile.getAbsolutePath());
+				if (pifile.isFile()) {
+					Log.i(TAG, "OK  Load cached embedded post Img: " + imgHashString);
+					H.picture[targetImg].setImageDrawable(new BitmapDrawable(pifile.getAbsolutePath()));
+					H.picture[targetImg].setVisibility(View.VISIBLE);
+				}
+				else {
+					Log.i(TAG, "OK  Decoding embedded post Img: " + Integer.toString(imgHash));
+					final byte[] imgAsBytes = Base64.decode(encodedImg.getBytes(), Base64.DEFAULT);
+					try{
+						FileOutputStream pifileOut = new FileOutputStream(pifile.getAbsolutePath());
+						pifileOut.write(imgAsBytes);
+						pifileOut.close();
+					}
+					catch(IOException e) {
+						e.printStackTrace();
+					}
 
-				final byte[] imgAsBytes = Base64.decode(encodedImg.getBytes(), Base64.DEFAULT);
-				H.picture[targetImg].setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(imgAsBytes, 0, imgAsBytes.length)));
-				H.picture[targetImg].setVisibility(View.VISIBLE);
+					//H.picture[targetImg].setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(imgAsBytes, 0, imgAsBytes.length)));
+					H.picture[targetImg].setImageDrawable(new BitmapDrawable(pifile.getAbsolutePath()));
+					H.picture[targetImg].setVisibility(View.VISIBLE);
+				}
 			}
 			else {
 				Log.i(TAG, "TRY Downloading post Img: " + piurl);
