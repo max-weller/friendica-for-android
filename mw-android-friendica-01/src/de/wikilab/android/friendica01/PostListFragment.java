@@ -44,6 +44,12 @@ public class PostListFragment extends ContentFragment {
 	
 	HashSet<Long> containedIds = new HashSet<Long>();
 	
+	/*@Override
+	public void onCreate(Bundle savedInstanceState) {
+	    super.onCreate(savedInstanceState);
+	    setRetainInstance(true);
+	}*/
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		myView = inflater.inflate(R.layout.pl_listviewinner, container, false);
