@@ -16,10 +16,8 @@
 					android:layout_height="wrap_content">
 						<include layout="@layout/header_logo" />
 					  
-						<TextView android:text="@string/hello" android:layout_width="wrap_content" android:layout_height="wrap_content"
-			    			  android:textColor="#000" android:layout_toRightOf="@id/header_logo" android:layout_alignBaseline="@id/header_logo"></TextView>
-			    	
-					</RelativeLayout>
+
+				</RelativeLayout>
 			    
 			    <LinearLayout android:paddingLeft="10dip" android:paddingTop="5dip" android:paddingBottom="5dip" android:background="@drawable/subheader_gradient" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
 			    	

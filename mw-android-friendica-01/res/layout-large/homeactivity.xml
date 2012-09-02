@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 					*********************************************
-					*******  T A B L E T   L A Y O U T           for HomeActivity
+					*******  T A B L E T   L A Y O U T           for HomeActivity
+
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -77,17 +78,6 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/toggle_left_bar" />
 
-            <TextView
-                android:id="@+id/header_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/header_logo"
-                android:layout_toRightOf="@id/header_logo"
-                android:text="@string/hello"
-                android:textColor="#000" 
-                android:maxLines="1">
-            </TextView>
-			
             <include layout="@layout/glob_searchbox"/>
             
             <ProgressBar android:id="@+id/glob_progressbar" android:layout_width="40dp" android:layout_height="40dp" android:layout_alignParentRight="true"
@@ -97,7 +87,8 @@
             <!--
             <ImageButton android:layout_height="wrap_content" android:id="@+id/btn_upload_paste" android:layout_toLeftOf="@+id/btn_upload_sdcard" android:layout_width="wrap_content" android:src="@drawable/clipboard_paste"></ImageButton>
 						<ImageButton android:layout_height="wrap_content" android:id="@+id/btn_upload_sdcard" android:layout_toLeftOf="@+id/btn_upload_photo" android:layout_width="wrap_content" android:src="@drawable/sdcard"></ImageButton>
-						<ImageButton android:layout_height="wrap_content" android:id="@+id/btn_upload_photo" android:layout_alignParentRight="true"  android:layout_width="wrap_content" android:src="@drawable/photo"></ImageButton>
+						<ImageButton android:layout_height="wrap_content" android:id="@+id/btn_upload_photo" android:layout_alignParentRight="true"  android:layout_width="wrap_content" android:src="@drawable/photo"></ImageButton>
+
             -->
         </RelativeLayout>
 
