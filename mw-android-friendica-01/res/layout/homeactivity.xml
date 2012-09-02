@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 					*********************************************
-					*******  S M A L L    P H O N E   L A Y O U T           for HomeActivity
+					*******  S M A L L    P H O N E   L A Y O U T           for HomeActivity
+
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -29,15 +30,6 @@
                 android:text="--&gt;"/>
                 
             
-            <TextView
-                android:id="@+id/header_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/toggle_left_bar"
-                android:text="@string/hello"
-                android:textColor="#000" 
-                android:maxLines="1">
-            </TextView>
 			<!-- 
             <include layout="@layout/glob_searchbox"/>
              -->
